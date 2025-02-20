@@ -1,0 +1,68 @@
+from flask import Flask, render_template_string, request, redirect, jsonify
+import views
+import sqlite3
+
+
+app = Flask(__name__)
+
+# Configurando a pasta de arquivos estáticos
+app.static_folder = 'static'
+
+#INDEX
+
+@app.route('/')
+def index():
+
+    return render_template_string(views.index())
+
+#CRIAR NOTAS SEM RECARREGAR
+@app.route('/submit', methods=['POST'])
+def submit_form():
+    titulo = request.form.get('titulo')
+    detalhes = request.form.get('detalhes')
+
+    note_id = views.submit(titulo, detalhes)  # Retorna o ID da nova nota
+
+    return jsonify({
+        "id": note_id,  # ID correto da nova nota
+        "titulo": titulo,
+        "detalhes": detalhes
+    })
+
+
+@app.route('/update/<int:note_id>', methods=['POST'])
+def edit_note(note_id):
+    titulo = request.form.get('titulo')
+    detalhes = request.form.get('detalhes')
+
+    views.edit_note(note_id, titulo, detalhes)
+
+    # Retorna JSON com a atualização
+    return jsonify({"message": "Nota atualizada!", "titulo": titulo, "detalhes": detalhes, "id": note_id})
+
+#EXCLUIR NOTAS
+@app.route('/delete/<int:note_id>', methods=['POST'])
+def delete_form(note_id):
+    # Deletar a nota do banco de dados
+    views.delete_note(note_id)
+    return jsonify({"status": "success", "note_id": note_id})
+
+@app.route('/update_order', methods=['POST'])
+def update_order():
+    data = request.json  # Recebe os dados do JavaScript
+    new_order = data.get("order")
+
+    conn = sqlite3.connect("db_notes.db")
+    cursor = conn.cursor()
+
+    # Atualiza a ordem das notas no banco de dados
+    for index, note_id in enumerate(new_order):
+        cursor.execute("UPDATE notes SET position = ? WHERE id = ?", (index, note_id))
+
+    conn.commit()
+
+    conn.close()
+    return jsonify({"message": "Ordem atualizada com sucesso!"})
+
+if __name__ == '__main__':
+    app.run(debug=True)

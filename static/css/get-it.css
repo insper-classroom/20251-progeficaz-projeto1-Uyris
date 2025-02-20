@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f7f7;
+}
+
+.div-principal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.logo-getit {
+    width: 100%;
+    padding: 1rem;
+    height: 100%;
+    gap: 2rem;
+}
+
+.logo {
+    height: 100%;
+    scale: 3;
+    padding-left: 1rem;
+}
+
+.img_logo {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 5rem;
+    align-items: center;
+    background-color: rgb(255, 255, 80);
+    box-shadow: 0.4rem;
+    gap: 3rem;
+    padding: 1rem;
+}
+
+/* Caixa de submissão com sombra */
+.submit-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+}
+
+.submit-form {
+    width: 25%;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 6px 15px rgba(0, 0, 0, 0.3);
+    background-color: rgb(255, 255, 255);
+}
+
+.submit-box input,
+.submit-box textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.submit-box button {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(255, 255, 134);
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-weight: bold;
+}
+
+.submit-box button:hover {
+    background-color: #000000;
+    color: white;
+}
+
+/* Contêiner das notas */
+.notes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 0.6fr));
+    max-width: 80%;
+    gap: 15px;
+    padding: 20px;
+    list-style: none;
+}
+
+/* Estilo dos adesivos */
+.note {
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.2);
+    word-wrap: break-word;
+    position: relative;
+    min-height: 100px;
+    font-family: 'Poppins', sans-serif;
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: space-evenly;
+    gap: 0.7rem;
+}
+
+/* Efeito de levantar quando passa o mouse */
+.note:hover {
+    transform: scale(1.05);
+}
+
+/* Definição de cores aleatórias para os post-its */
+.note:nth-child(5n+1) { background-color: #ffeb99; } /* Amarelo claro */
+.note:nth-child(5n+2) { background-color: #ffcccb; } /* Rosa claro */
+.note:nth-child(5n+3) { background-color: #c3f3c3; } /* Verde claro */
+.note:nth-child(5n+4) { background-color: #add8e6; } /* Azul claro */
+.note:nth-child(5n)   { background-color: #e6c3f3; } /* Roxo claro */
+
+/* Cabeçalho da nota */
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilização do título */
+.note h3 {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+
+/* Estilização do texto */
+.note p {
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+/* Botões de editar e excluir */
+.note-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.note-buttons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.note-buttons button:hover {
+    opacity: 0.7;
+    color: red;
+    transition: ease 0.3s;
+}
+
+.note-buttons svg {
+    width: 18px;
+    height: 18px;
+    fill: black;
+}
+
+/* Fundo escurecido ao abrir o modal */
+.edit-modal {
+    display: none; /* Começa escondido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Conteúdo do modal */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+    height: 50%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Campos do formulário */
+.modal-content input {
+    width: 100%;
+    height: fit-content;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Botões */
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.modal-buttons button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.modal-buttons .save-btn {
+    background: #28a745;
+    color: white;
+}
+.modal-bottom {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.modal-buttons .cancel-btn {
+    background: #dc3545;
+    color: white;
+}
+.modal-content form {
+    height: 100%;
+}
+.div-edit-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+}

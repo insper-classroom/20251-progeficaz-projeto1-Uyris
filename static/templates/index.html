@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="static/css/reset.css">
+<link rel="stylesheet" href="static/css/get-it.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=delete" />
+
+<title>Get-it</title>
+</head>
+<body>
+  <div class="div-principal">
+    <div class='img_logo'>
+      <div class="logo">
+        <img class="logo-getit" src="{{{{ url_for('static', filename='img/logo-getit.png') }}}}">
+      </div>
+      <h1 style="font-size: 1.5rem;">Como o Post-it, mas com outro verbo</h1>
+    </div>
+    
+    <div class="submit-box">
+      <div class='submit-form'>
+        <form id="note-form">
+          <label for="titulo">Título:</label>
+          <input id="titulo" type="text" name="titulo" placeholder='Digite o título da sua nota'required />
+          <label for="detalhes">Detalhes:</label>
+          <textarea id="detalhes" name="detalhes" placeholder="Digite os detalhes da sua nota" required></textarea>
+          <button type="submit">Enviar</button>
+        </form>
+      </div>
+    </div>
+
+    <ul class="notes-container">
+      {notes}
+    </ul>
+  </div>
+
+  <div class="edit-modal" id="edit-modal">
+    <div class="modal-content">
+        <h2>Editar Nota</h2>
+        <form id="edit-form">
+          <div class="div-edit-form">
+            <input type="hidden" id="edit-id" name="edit-id"> <!-- ID da nota -->
+            <label for="edit-titulo">Título</label>
+            <input id="edit-titulo" type="text" name="titulo" required />
+            <label for="edit-detalhes">Detalhes</label>
+            <input id="edit-detalhes" name="detalhes" required />
+            <div class="modal-bottom">
+            <div class="modal-buttons">
+                <button type="submit" class="save-btn">Salvar</button>
+                <button type="button" class="cancel-btn">Cancelar</button>
+            </div>
+            </div>
+          </div>
+        </form>
+    </div>
+</div>
+
+
+</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+  <script src="static/js/get-it.js"></script>
+</body>
+</html>
