@@ -9,17 +9,16 @@
 <title>Get-it</title>
 </head>
 <body>
-  <div class="div-principal">
     <div class='img_logo'>
       <div class="logo">
         <img class="logo-getit" src="{{{{ url_for('static', filename='img/logo-getit.png') }}}}">
       </div>
       <h1 style="font-size: 1.5rem;">Como o Post-it, mas com outro verbo</h1>
     </div>
-    
+  <div class="div-principal">
     <div class="submit-box">
       <div class='submit-form'>
-        <form id="note-form">
+        <form id="note-form" action="/submit" method="POST">
           <label style="font-weight: bold;">Adicione uma Nota:</label>
           <input id="titulo" type="text" name="titulo" placeholder='Digite seu Título...'required />
           <textarea id="detalhes" name="detalhes" placeholder="Adicione os Detalhes..." required></textarea>
@@ -39,10 +38,10 @@
         <form id="edit-form">
           <div class="div-edit-form">
             <input type="hidden" id="edit-id" name="edit-id"> <!-- ID da nota -->
-            <label for="edit-titulo">Título</label>
+            <label for="edit-titulo">Título:</label>
             <input id="edit-titulo" type="text" name="titulo" required />
-            <label for="edit-detalhes">Detalhes</label>
-            <input id="edit-detalhes" name="detalhes" required />
+            <label for="edit-detalhes">Detalhes:</label>
+            <textarea class="edit-detalhes" id="edit-detalhes" name="detalhes" required ></textarea>
             <div class="modal-bottom">
             <div class="modal-buttons">
                 <button type="submit" class="save-btn">Salvar</button>

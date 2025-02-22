@@ -23,15 +23,9 @@ def submit_form():
     detalhes = request.form.get('detalhes')
     colors = ["#ffeb99", "#ffcccb", "#c3f3c3", "#add8e6", "#e6c3f3"]  # Lista de cores possíveis
     selected_color = random.choice(colors)  # Escolhe uma cor aleatória
+    views.submit(titulo, detalhes, selected_color)  # Retorna o ID da nova nota
 
-    note_id = views.submit(titulo, detalhes, selected_color)  # Retorna o ID da nova nota
-
-    return jsonify({
-        "id": note_id,  # ID correto da nova nota
-        "titulo": titulo,
-        "detalhes": detalhes,
-        "color": selected_color
-    })
+    return redirect('/')
 
 
 @app.route('/update/<int:note_id>', methods=['POST'])

@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
             const note = this.closest(".note");
             activeNote = note;
+            const noteBody = this.closest(".note-body");
+            activeNotebody = noteBody;
             const noteId = note.getAttribute("data-id");
             const noteTitle = note.querySelector("h3").innerText;
             const noteDetails = note.querySelector("p").innerText;
@@ -24,7 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.querySelector(".modal-content").style.backgroundColor = noteBgColor;
 
             // Adiciona efeito de zoom na nota
-            note.classList.add("zoomed-note");
+            note.classList.add("flipped");
+            noteBody.classList.add("none");
 
             // Exibe o modal
             modal.style.display = "flex";
@@ -53,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 activeNote.querySelector("p").innerText = data.detalhes;
             }
 
-            closeModal(); // Fecha o modal e remove o zoom
+            closeModal(); 
         })
         .catch(error => console.error("Erro ao atualizar nota:", error));
     });
@@ -61,7 +64,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function closeModal() {
         modal.style.display = "none";
         if (activeNote) {
-            activeNote.classList.remove("zoomed-note"); // Remove o zoom
+            activeNote.classList.remove("flipped");
+            activeNote = null;
+        };
+        if (activeNotebody){
+            activeNotebody.classList.remove("none");
             activeNote = null;
         }
     }
@@ -75,81 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
             closeModal();
         }
     });
-});
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector(".submit-form form");
-    const notesContainer = document.querySelector(".notes-container");
-
-    function attachNoteEvents(note) {
-        // Evento de edição
-        note.querySelector("[title='Editar']").addEventListener("click", function () {
-            const noteId = note.getAttribute("data-id");
-            openEditModal(noteId);
-        });
-
-        // Evento de deletar
-        note.querySelector("[title='Deletar']").addEventListener("click", function () {
-            const noteId = note.getAttribute("data-id");
-            deleteNote(noteId);
-        });
-    }
-
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const formData = new FormData(form);
-
-        fetch("/submit", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                console.error("Erro ao criar a nota:", data.error);
-                return;
-            }
-
-            // Criar um novo elemento para a nota
-            const newNote = document.createElement("li");
-            newNote.classList.add("note");
-            newNote.setAttribute("data-id", data.id);
-            
-            newNote.innerHTML = `
-                <h3>${data.titulo}</h3>
-                <p>${data.detalhes}</p>
-                <div class="note-buttons">
-                        <button type="submit" title="Editar">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm18.71-11.04c.39-.39.39-1.02 0-1.41l-2.54-2.54c-.39-.39-1.02-.39-1.41 0l-1.82 1.82 3.75 3.75 1.82-1.82z"></path>
-                            </svg>
-                        </button>
-                        <button type="submit" title="Deletar">
-                            <span class="material-symbols-outlined"> delete </span>
-                        </button>
-                </div>
-            `;
-
-            // Adicionar eventos para os botões da nova nota
-            attachNoteEvents(newNote);
-
-            // Adicionar ao final da lista
-            notesContainer.appendChild(newNote);
-
-            setTimeout(function () {
-                modal.style.display = "none";
-            }, 1000);   
-
-            // Limpar formulário
-            form.reset();
-        })
-        .catch(error => console.error("Erro ao enviar a nota:", error));
-    });
-
-    // Adiciona eventos às notas existentes ao carregar a página
-    document.querySelectorAll(".note").forEach(attachNoteEvents);
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -216,4 +148,24 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => console.log("Ordem salva:", data))
         .catch(error => console.error("Erro ao salvar ordem:", error));
     }
+});
+
+//scroll da página
+document.addEventListener("DOMContentLoaded", function () {
+    let lastScrollTop = 0;
+    const imgLogo = document.querySelector(".img_logo");
+
+    window.addEventListener("scroll", function () {
+        let scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+        if (scrollTop > lastScrollTop) {
+            // Rolando para baixo, esconde a logo
+            imgLogo.classList.add("hidden");
+        } else {
+            // Rolando para cima, mostra a logo
+            imgLogo.classList.remove("hidden");
+        }
+
+        lastScrollTop = scrollTop;
+    });
 });
