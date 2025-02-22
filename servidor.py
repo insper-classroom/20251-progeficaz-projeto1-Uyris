@@ -32,8 +32,9 @@ def submit_form():
 def edit_note(note_id):
     titulo = request.form.get('titulo')
     detalhes = request.form.get('detalhes')
+    cor = request.form.get('cor')
 
-    views.edit_note(note_id, titulo, detalhes)
+    views.edit_note(note_id, titulo, detalhes, cor)
 
     # Retorna JSON com a atualização
     return jsonify({"message": "Nota atualizada!", "titulo": titulo, "detalhes": detalhes, "id": note_id})

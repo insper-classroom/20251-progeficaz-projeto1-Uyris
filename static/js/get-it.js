@@ -25,12 +25,22 @@ document.addEventListener("DOMContentLoaded", function () {
             editId.value = noteId;
             modal.querySelector(".modal-content").style.backgroundColor = noteBgColor;
 
-            // Adiciona efeito de zoom na nota
+            // Adiciona efeito de filp da nota
             note.classList.add("flipped");
             noteBody.classList.add("none");
 
             // Exibe o modal
             modal.style.display = "flex";
+        });
+    });
+
+    let selectedColor = '';  // Variável para armazenar a cor selecionada
+
+    // Quando o usuário selecionar uma cor
+    document.querySelectorAll(".color-option").forEach(button => {
+        button.addEventListener("click", function () {
+            selectedColor = this.getAttribute("data-color");  // Pega a cor do botão clicado
+            document.querySelector("#editModal .modal-content").style.backgroundColor = selectedColor;  // Altera a cor do modal
         });
     });
 
@@ -42,10 +52,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const titulo = editTitle.value;
         const detalhes = editDetails.value;
 
+            // Atualiza a cor da nota se uma cor for selecionada
+        if (selectedColor) {
+            document.querySelector(`[data-id='${noteId}']`).style.backgroundColor = selectedColor;
+        }
+
         fetch(`/update/${noteId}`, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ titulo, detalhes }) 
+            body: new URLSearchParams({ titulo, detalhes, cor: selectedColor }) 
         })
         .then(response => response.json())
         .then(data => {
@@ -110,6 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok) {
                 // Se a resposta for bem-sucedida, removemos a nota do DOM
                 note.remove();
+                overlay.style.display = "none"; // Esconde a sobreposição
             } else {
                 console.error("Erro ao deletar a nota");
             }
@@ -119,6 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Adiciona eventos às notas existentes ao carregar a página
     document.querySelectorAll(".note").forEach(attachNoteEvents);
+    overlay.style.display = "none"; // Esconde a sobreposição
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -169,3 +186,27 @@ document.addEventListener("DOMContentLoaded", function () {
         lastScrollTop = scrollTop;
     });
 });
+
+//visualizar nota
+let overlay = document.createElement("div");
+overlay.classList.add("overlay");
+document.body.appendChild(overlay);  // Adiciona a sobreposição ao body
+
+document.querySelectorAll(".note h3").forEach(noteTitle => {
+    noteTitle.addEventListener("click", function() {
+        const note = this.closest(".note");
+        note.classList.add("expanded"); // Expande a nota
+        overlay.style.display = "block"; // Mostra a sobreposição
+
+        // Impede que a sobreposição clique na página
+        overlay.addEventListener("click", function() {
+            closeModal(); // Fecha a nota expandida ao clicar fora
+        });
+    });
+});
+
+function closeModal() {
+    document.querySelectorAll(".note").forEach(note => note.classList.remove("expanded"));
+    overlay.style.display = "none"; // Esconde a sobreposição
+}
+

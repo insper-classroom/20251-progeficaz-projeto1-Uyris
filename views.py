@@ -61,12 +61,12 @@ def delete_note(note_id):
 
     conn.close() #Fechando a conexão
 
-def edit_note(note_id, titulo, detalhes):
+def edit_note(note_id, titulo, detalhes, cor):
     conn = sqlite3.connect('db_notes.db') #Estabelecendo conexão com o servidor
 
     cursor = conn.cursor() #Definindo o ponteiro para usar outros comandos da biblioteca
 
-    cursor.execute("UPDATE notes SET title = ?, details = ? WHERE id = ?", (titulo, detalhes, note_id)) #Deletando todos os arquivos que tenham o ID selecionado.
+    cursor.execute("UPDATE notes SET title = ?, details = ?, color = ? WHERE id = ?", (titulo, detalhes, cor, note_id))
 
     conn.commit() #Salvando alterações no banco de dados
 
