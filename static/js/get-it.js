@@ -5,13 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const editDetails = document.getElementById("edit-detalhes");
     const editId = document.getElementById("edit-id");
     const cancelBtn = document.querySelector(".cancel-btn");
+    let activeNote = null; // Para armazenar a nota que está sendo editada
 
-    // Captura todos os botões de edição
     document.querySelectorAll(".note-buttons button[title='Editar']").forEach(button => {
         button.addEventListener("click", function (event) {
             event.preventDefault();
-            const note = this.closest(".note"); 
-            const noteId = note.getAttribute("data-id"); 
+            const note = this.closest(".note");
+            activeNote = note;
+            const noteId = note.getAttribute("data-id");
             const noteTitle = note.querySelector("h3").innerText;
             const noteDetails = note.querySelector("p").innerText;
             const noteBgColor = window.getComputedStyle(note).backgroundColor;
@@ -19,8 +20,11 @@ document.addEventListener("DOMContentLoaded", function () {
             // Preenche os campos do modal
             editTitle.value = noteTitle;
             editDetails.value = noteDetails;
-            editId.value = noteId; 
+            editId.value = noteId;
             modal.querySelector(".modal-content").style.backgroundColor = noteBgColor;
+
+            // Adiciona efeito de zoom na nota
+            note.classList.add("zoomed-note");
 
             // Exibe o modal
             modal.style.display = "flex";
@@ -35,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const titulo = editTitle.value;
         const detalhes = editDetails.value;
 
-
         fetch(`/update/${noteId}`, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -45,33 +48,35 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             console.log("Resposta do servidor:", data);
 
-            // Atualiza a nota na interface sem recarregar a página
-            const note = document.querySelector(`.note[data-id="${noteId}"]`);
-            if (note) {
-                note.querySelector("h3").innerText = data.titulo;
-                note.querySelector("p").innerText = data.detalhes;
-            } else {
-                console.error("Erro: Nota não encontrada no DOM.");
+            if (activeNote) {
+                activeNote.querySelector("h3").innerText = data.titulo;
+                activeNote.querySelector("p").innerText = data.detalhes;
             }
 
-            // Fecha o modal
-            modal.style.display = "none";
+            closeModal(); // Fecha o modal e remove o zoom
         })
         .catch(error => console.error("Erro ao atualizar nota:", error));
     });
 
-    // Fechar modal ao clicar no botão cancelar
-    cancelBtn.addEventListener("click", function () {
+    function closeModal() {
         modal.style.display = "none";
-    });
+        if (activeNote) {
+            activeNote.classList.remove("zoomed-note"); // Remove o zoom
+            activeNote = null;
+        }
+    }
+
+    // Fechar modal ao clicar no botão cancelar
+    cancelBtn.addEventListener("click", closeModal);
 
     // Fechar modal ao clicar fora do conteúdo
     modal.addEventListener("click", function (event) {
         if (event.target === modal) {
-            modal.style.display = "none";
+            closeModal();
         }
     });
 });
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector(".submit-form form");
@@ -111,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const newNote = document.createElement("li");
             newNote.classList.add("note");
             newNote.setAttribute("data-id", data.id);
+            
             newNote.innerHTML = `
                 <h3>${data.titulo}</h3>
                 <p>${data.detalhes}</p>
@@ -131,6 +137,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Adicionar ao final da lista
             notesContainer.appendChild(newNote);
+
+            setTimeout(function () {
+                modal.style.display = "none";
+            }, 1000);   
 
             // Limpar formulário
             form.reset();
@@ -183,12 +193,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const notesContainer = document.querySelector(".notes-container");
 
     new Sortable(notesContainer, {
-        animation: 200, // Suaviza o movimento
-        ghostClass: "ghost", // Classe para estilizar o item enquanto arrasta
+        animation: 300,  // Aumenta o tempo da animação para ficar mais fluido
+        ghostClass: "ghost",  // Classe CSS para o item arrastado
+        easing: "cubic-bezier(0.25, 1, 0.5, 1)",  // Animação mais suave
+        swapThreshold: 0.5, // Garante que a troca só ocorra na metade do caminho
+    
         onEnd: function (evt) {
             saveNewOrder();
         }
     });
+    
 
     function saveNewOrder() {
         const noteIds = [...document.querySelectorAll(".note")].map(note => note.getAttribute("data-id"));

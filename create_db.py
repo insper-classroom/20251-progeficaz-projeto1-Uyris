@@ -14,7 +14,8 @@ sql = '''CREATE TABLE "notes" (
     "ID" INTEGER PRIMARY KEY AUTOINCREMENT,
     "Title" TEXT,
     "Details" TEXT,
-    "position" INTEGER
+    "position" INTEGER,
+    "color" TEXT
 )'''
 cur.execute(sql)
 

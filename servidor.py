@@ -1,6 +1,7 @@
 from flask import Flask, render_template_string, request, redirect, jsonify
 import views
 import sqlite3
+import random
 
 
 app = Flask(__name__)
@@ -20,13 +21,16 @@ def index():
 def submit_form():
     titulo = request.form.get('titulo')
     detalhes = request.form.get('detalhes')
+    colors = ["#ffeb99", "#ffcccb", "#c3f3c3", "#add8e6", "#e6c3f3"]  # Lista de cores possíveis
+    selected_color = random.choice(colors)  # Escolhe uma cor aleatória
 
-    note_id = views.submit(titulo, detalhes)  # Retorna o ID da nova nota
+    note_id = views.submit(titulo, detalhes, selected_color)  # Retorna o ID da nova nota
 
     return jsonify({
         "id": note_id,  # ID correto da nova nota
         "titulo": titulo,
-        "detalhes": detalhes
+        "detalhes": detalhes,
+        "color": selected_color
     })
 
 
@@ -49,20 +53,12 @@ def delete_form(note_id):
 
 @app.route('/update_order', methods=['POST'])
 def update_order():
-    data = request.json  # Recebe os dados do JavaScript
-    new_order = data.get("order")
-
-    conn = sqlite3.connect("db_notes.db")
-    cursor = conn.cursor()
-
-    # Atualiza a ordem das notas no banco de dados
-    for index, note_id in enumerate(new_order):
-        cursor.execute("UPDATE notes SET position = ? WHERE id = ?", (index, note_id))
-
-    conn.commit()
-
-    conn.close()
+    views.update_order(request)
     return jsonify({"message": "Ordem atualizada com sucesso!"})
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template_string(views.error404())
 
 if __name__ == '__main__':
     app.run(debug=True)

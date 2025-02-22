@@ -10,13 +10,12 @@ def load_data(table_name):
     data_format = []
     data = cursor.fetchall()
     for note in data:
-        data_format.append({'id': note[0], 'titulo': note[1], 'detalhes': note[2], 'position': note[3]})
+        data_format.append({'id': note[0], 'titulo': note[1], 'detalhes': note[2], 'position': note[3], 'color': note[4]})
 
     # FECHANDO CONEXÃO
     conn.close()
     
     return data_format
-
 
 def load_template(template_path):
     with open('static/templates/'+ template_path, 'r', encoding='utf-8') as template:

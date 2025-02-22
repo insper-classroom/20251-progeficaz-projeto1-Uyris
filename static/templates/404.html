@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página não encontrada</title>
+    <style>
+        html {
+            height: 100%;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            height: 100%;
+            margin: 0;
+        }
+        .div-principal {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .div-img {
+            width: 100%;
+            height: 50%;
+        }
+        img {
+            width: 40%;
+        }
+        h1 {
+            color: rgb(226, 226, 11);
+            -webkit-text-stroke: 0.5px black; /* Para navegadores WebKit */
+            text-shadow: 
+                -0.5px -0.5px 0 black,  
+                0.5px -0.5px 0 black,
+                -0.5px  0.5px 0 black,
+                0.5px  0.5px 0 black; /* Para outros navegadores */
+            font-size: 4rem;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: rgb(255, 255, 80);
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: rgb(0, 0, 0);
+            color: white;
+            transition: ease 0.3s;
+        }
+        p {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="div-principal">
+     <div class="div-img">
+        <img class="logo-getit" src="{{ url_for('static', filename='img/logo-getit.png') }}">   
+     </div>
+     <h1>404 - Página não encontrada</h1>
+     <p>A página que você procura não existe ou foi removida.</p>
+     <a href="/">Voltar para a página inicial</a>
+    </div>
+</body>
+</html>
